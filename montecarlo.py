@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 
 
 def SABR_S(S0: float,v0: float,beta: float,dW: float):
-    return S0+gamma*v0*np.power(S0,beta)*dW
+    # print(S0)
+    return np.maximum(S0+gamma*v0*np.power(S0,beta)*dW,0)
 
 def SABR_v(v0: float,gamma: float,dW: float):
-    return v0+gamma*v0*dW
+    return np.maximum(v0*(1+gamma*dW),0)
 
 def SABR_step(S0: float, v0: float, gamma: float, beta: float,rho: float, dt: float):
     dW1 = np.random.standard_normal(len(S0))*np.sqrt(dt)
@@ -21,7 +22,8 @@ def SABR(S0: float,alpha: float,beta: float,gamma: float,rho: float,T: float,n_p
     v = np.ones(n_p)*alpha
     for i in range(n_t):
         S,v = SABR_step(S,v,gamma,beta,rho,dt)
-        print(S)
+        S -= S.mean() - S0
+        # print(S)
 
     return S 
 
